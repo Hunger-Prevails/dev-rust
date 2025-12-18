@@ -20,6 +20,33 @@ fn read_lines(filename: String) -> io::Result<Vec<String>> {
 }
 
 
+struct LinSpace {
+    start: f64,
+    end: f64,
+    increment: f64
+}
+
+impl LinSpace {
+    fn new(start: f64, end: f64, increment: f64) -> Self {
+        Self {start: start, end: end, increment: increment}
+    }
+}
+
+impl Iterator for LinSpace {
+    type Item = f64;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.start < self.end {
+            let ret = Some(self.start);
+            self.start += self.increment;
+            ret
+        } else {
+            None
+        }
+    }
+}
+
+
 fn main() {
 	let filepath = env::args().nth(1).expect("please supply an argument");
 
@@ -46,5 +73,11 @@ fn main() {
 
     if let Ok(names) = read_lines_result {
         println!("{:?}", names);
+    }
+
+    let vec = LinSpace::new(0.0, 1.0, 0.1).collect::<Vec<f64>>();
+
+    for x in vec {
+        println!("{:.1}", x);
     }
 }
